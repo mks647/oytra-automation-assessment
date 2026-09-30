@@ -1,0 +1,315 @@
+{
+  "data": {
+    "version": 1,
+    "startData": {},
+    "resultData": {
+      "runData": {
+        "Manual test": [
+          {
+            "startTime": 1790741418187,
+            "executionIndex": 0,
+            "source": [],
+            "hints": [],
+            "executionTime": 1,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {},
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Settings": [
+          {
+            "startTime": 1790741418200,
+            "executionIndex": 1,
+            "source": [
+              {
+                "previousNode": "Manual test",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 1143,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "appUrl": "http://localhost:3000/not-found",
+                      "fromEmail": "mukul@example.test",
+                      "toEmail": "mukul@example.test",
+                      "startedAt": 1790741419342
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Ping tested app": [
+          {
+            "startTime": 1790741419348,
+            "executionIndex": 2,
+            "source": [
+              {
+                "previousNode": "Settings",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 48,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "data": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /not-found</pre>\n</body>\n</html>\n",
+                      "headers": {
+                        "x-powered-by": "Express",
+                        "access-control-allow-origin": "*",
+                        "content-security-policy": "default-src 'none'",
+                        "x-content-type-options": "nosniff",
+                        "content-type": "text/html; charset=utf-8",
+                        "content-length": "148",
+                        "date": "Wed, 30 Sep 2026 04:10:19 GMT",
+                        "connection": "close"
+                      },
+                      "statusCode": 404,
+                      "statusMessage": "Not Found"
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Measure response": [
+          {
+            "startTime": 1790741419409,
+            "executionIndex": 3,
+            "source": [
+              {
+                "previousNode": "Ping tested app",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 11,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "url": "http://localhost:3000/not-found",
+                      "statusCode": 404,
+                      "elapsedMs": 77,
+                      "healthy": false,
+                      "error": null,
+                      "checkedAt": "2026-09-30T04:10:19.419Z"
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "App is unhealthy": [
+          {
+            "startTime": 1790741419426,
+            "executionIndex": 4,
+            "source": [
+              {
+                "previousNode": "Measure response",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 13,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "url": "http://localhost:3000/not-found",
+                      "statusCode": 404,
+                      "elapsedMs": 77,
+                      "healthy": false,
+                      "error": null,
+                      "checkedAt": "2026-09-30T04:10:19.419Z"
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ],
+                []
+              ]
+            }
+          }
+        ],
+        "Build uptime alert": [
+          {
+            "startTime": 1790741419444,
+            "executionIndex": 5,
+            "source": [
+              {
+                "previousNode": "App is unhealthy",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 6,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "subject": "UPTIME ALERT | RealWorld API",
+                      "text": "URL: http://localhost:3000/not-found\nStatus: 404\nElapsed including retries: 77 ms\nTime: 2026-09-30T04:10:19.419Z\nError: HTTP status is not 200"
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Send email": [
+          {
+            "startTime": 1790741419455,
+            "executionIndex": 6,
+            "source": [
+              {
+                "previousNode": "Build uptime alert",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 198,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "accepted": [
+                        "mukul@example.test"
+                      ],
+                      "rejected": [],
+                      "ehlo": [
+                        "PIPELINING",
+                        "8BITMIME",
+                        "SMTPUTF8"
+                      ],
+                      "envelopeTime": 3,
+                      "messageTime": 43,
+                      "messageSize": 506,
+                      "response": "250 OK: message queued",
+                      "envelope": {
+                        "from": "mukul@example.test",
+                        "to": [
+                          "mukul@example.test"
+                        ]
+                      },
+                      "messageId": "<b5f3c957-614d-dcfb-5a61-a9cc6a371d5b@example.test>"
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Verify notification delivery": [
+          {
+            "startTime": 1790741419658,
+            "executionIndex": 7,
+            "source": [
+              {
+                "previousNode": "Send email",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 6,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "delivery": "accepted-by-smtp",
+                      "messageId": "<b5f3c957-614d-dcfb-5a61-a9cc6a371d5b@example.test>",
+                      "accepted": [
+                        "mukul@example.test"
+                      ]
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      "lastNodeExecuted": "Verify notification delivery"
+    },
+    "executionData": {
+      "contextData": {},
+      "nodeExecutionStack": [],
+      "metadata": {},
+      "waitingExecution": {},
+      "waitingExecutionSource": {},
+      "runtimeData": {
+        "version": 1,
+        "establishedAt": 1790741418186,
+        "source": "cli",
+        "triggerNode": {
+          "name": "Manual test",
+          "type": "n8n-nodes-base.manualTrigger"
+        }
+      }
+    }
+  },
+  "mode": "cli",
+  "startedAt": "2026-09-30T04:10:18.181Z",
+  "stoppedAt": "2026-09-30T04:10:19.671Z",
+  "storedAt": "db",
+  "status": "success",
+  "finished": true
+}

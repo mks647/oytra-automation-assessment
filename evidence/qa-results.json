@@ -1,0 +1,305 @@
+[
+  {
+    "test": "Sign up happy path",
+    "method": "POST",
+    "path": "/users",
+    "request": {
+      "user": {
+        "email": "qa-ac5be309@example.test",
+        "username": "qa-ac5be309",
+        "password": "LocalTest123!"
+      }
+    },
+    "status": 201,
+    "response": {
+      "user": {
+        "id": 2,
+        "email": "qa-ac5be309@example.test",
+        "username": "qa-ac5be309",
+        "bio": null,
+        "image": "https://api.realworld.io/images/smiley-cyrus.jpeg"
+      }
+    }
+  },
+  {
+    "test": "Login happy path",
+    "method": "POST",
+    "path": "/users/login",
+    "request": {
+      "user": {
+        "email": "qa-ac5be309@example.test",
+        "password": "LocalTest123!"
+      }
+    },
+    "status": 200,
+    "response": {
+      "user": {
+        "email": "qa-ac5be309@example.test",
+        "username": "qa-ac5be309",
+        "bio": null,
+        "image": "https://api.realworld.io/images/smiley-cyrus.jpeg"
+      }
+    }
+  },
+  {
+    "test": "Create article",
+    "method": "POST",
+    "path": "/articles",
+    "request": {
+      "article": {
+        "title": "QA ac5be309",
+        "description": "QA test",
+        "body": "Test article",
+        "tagList": [
+          "python",
+          "qa"
+        ]
+      }
+    },
+    "status": 201,
+    "response": {
+      "article": {
+        "slug": "QA-ac5be309-2",
+        "title": "QA ac5be309",
+        "description": "QA test",
+        "body": "Test article",
+        "tagList": [
+          "python",
+          "qa"
+        ],
+        "createdAt": "2026-09-30T06:57:58.263Z",
+        "updatedAt": "2026-09-30T06:57:58.263Z",
+        "favorited": false,
+        "favoritesCount": 0,
+        "author": {
+          "username": "qa-ac5be309",
+          "bio": null,
+          "image": "https://api.realworld.io/images/smiley-cyrus.jpeg",
+          "following": false
+        }
+      }
+    }
+  },
+  {
+    "test": "Edit body only (check tag preservation)",
+    "method": "PUT",
+    "path": "/articles/QA-ac5be309-2",
+    "request": {
+      "article": {
+        "body": "Edited body"
+      }
+    },
+    "status": 200,
+    "response": {
+      "article": {
+        "slug": "QA-ac5be309-2",
+        "title": "QA ac5be309",
+        "description": "QA test",
+        "body": "Edited body",
+        "tagList": [],
+        "createdAt": "2026-09-30T06:57:58.263Z",
+        "updatedAt": "2026-09-30T06:57:58.292Z",
+        "favorited": false,
+        "favoritesCount": 0,
+        "author": {
+          "username": "qa-ac5be309",
+          "bio": null,
+          "image": "https://api.realworld.io/images/smiley-cyrus.jpeg",
+          "following": false
+        }
+      }
+    }
+  },
+  {
+    "test": "Whitespace title accepted",
+    "method": "POST",
+    "path": "/articles",
+    "request": {
+      "article": {
+        "title": "   ",
+        "description": "   ",
+        "body": "   "
+      }
+    },
+    "status": 201,
+    "response": {
+      "article": {
+        "slug": "-2",
+        "title": "   ",
+        "description": "   ",
+        "body": "   ",
+        "tagList": [],
+        "createdAt": "2026-09-30T06:57:58.323Z",
+        "updatedAt": "2026-09-30T06:57:58.323Z",
+        "favorited": false,
+        "favoritesCount": 0,
+        "author": {
+          "username": "qa-ac5be309",
+          "bio": null,
+          "image": "https://api.realworld.io/images/smiley-cyrus.jpeg",
+          "following": false
+        }
+      }
+    }
+  },
+  {
+    "test": "Invalid email and one character password",
+    "method": "POST",
+    "path": "/users",
+    "request": {
+      "user": {
+        "email": "invalid-ac5be309",
+        "username": "weak-ac5be309",
+        "password": "x"
+      }
+    },
+    "status": 201,
+    "response": {
+      "user": {
+        "id": 3,
+        "email": "invalid-ac5be309",
+        "username": "weak-ac5be309",
+        "bio": null,
+        "image": "https://api.realworld.io/images/smiley-cyrus.jpeg"
+      }
+    }
+  },
+  {
+    "test": "One-character password with valid email",
+    "method": "POST",
+    "path": "/users",
+    "request": {
+      "user": {
+        "email": "weak-valid-ac5be309@example.test",
+        "username": "weak-valid-ac5be309",
+        "password": "x"
+      }
+    },
+    "status": 201,
+    "response": {
+      "user": {
+        "id": 4,
+        "email": "weak-valid-ac5be309@example.test",
+        "username": "weak-valid-ac5be309",
+        "bio": null,
+        "image": "https://api.realworld.io/images/smiley-cyrus.jpeg"
+      }
+    }
+  },
+  {
+    "test": "Missing user payload",
+    "method": "POST",
+    "path": "/users/login",
+    "request": {},
+    "status": 500,
+    "response": "Cannot read properties of undefined (reading 'email')"
+  },
+  {
+    "test": "Invalid pagination",
+    "method": "GET",
+    "path": "/articles?limit=abc",
+    "request": null,
+    "status": 200,
+    "response": {
+      "articles": [],
+      "articlesCount": 0
+    }
+  },
+  {
+    "test": "Set bio",
+    "method": "PUT",
+    "path": "/user",
+    "request": {
+      "user": {
+        "bio": "Temporary QA biography"
+      }
+    },
+    "status": 200,
+    "response": {
+      "user": {
+        "id": 2,
+        "email": "qa-ac5be309@example.test",
+        "username": "qa-ac5be309",
+        "bio": "Temporary QA biography",
+        "image": "https://api.realworld.io/images/smiley-cyrus.jpeg"
+      }
+    }
+  },
+  {
+    "test": "Clear bio using empty string",
+    "method": "PUT",
+    "path": "/user",
+    "request": {
+      "user": {
+        "bio": ""
+      }
+    },
+    "status": 200,
+    "response": {
+      "user": {
+        "id": 2,
+        "email": "qa-ac5be309@example.test",
+        "username": "qa-ac5be309",
+        "bio": "Temporary QA biography",
+        "image": "https://api.realworld.io/images/smiley-cyrus.jpeg"
+      }
+    }
+  },
+  {
+    "test": "Get bio after clear",
+    "method": "GET",
+    "path": "/user",
+    "request": null,
+    "status": 200,
+    "response": {
+      "user": {
+        "id": 2,
+        "email": "qa-ac5be309@example.test",
+        "username": "qa-ac5be309",
+        "bio": "Temporary QA biography",
+        "image": "https://api.realworld.io/images/smiley-cyrus.jpeg"
+      }
+    }
+  },
+  {
+    "test": "Delete article",
+    "method": "DELETE",
+    "path": "/articles/QA-ac5be309-2",
+    "request": null,
+    "status": 204,
+    "response": {}
+  },
+  {
+    "test": "Deleted article lookup",
+    "method": "GET",
+    "path": "/articles/QA-ac5be309-2",
+    "request": null,
+    "status": 404,
+    "response": {
+      "errors": {
+        "article": [
+          "not found"
+        ]
+      }
+    }
+  },
+  {
+    "test": "Logged out (token removed)",
+    "method": "GET",
+    "path": "/user",
+    "request": null,
+    "status": 401,
+    "response": {
+      "status": "error",
+      "message": "missing authorization credentials"
+    }
+  },
+  {
+    "test": "Malformed JSON",
+    "method": "POST",
+    "path": "/users",
+    "request": "{bad-json",
+    "status": 500,
+    "response": "\"Expected property name or '}' in JSON at position 1 (line 1 column 2)\""
+  }
+]

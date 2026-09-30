@@ -1,0 +1,235 @@
+{
+  "data": {
+    "version": 1,
+    "startData": {},
+    "resultData": {
+      "runData": {
+        "Manual test": [
+          {
+            "startTime": 1790741410427,
+            "executionIndex": 0,
+            "source": [],
+            "hints": [],
+            "executionTime": 1,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {},
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Settings": [
+          {
+            "startTime": 1790741410435,
+            "executionIndex": 1,
+            "source": [
+              {
+                "previousNode": "Manual test",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 574,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "appUrl": "http://localhost:3000/",
+                      "fromEmail": "mukul@example.test",
+                      "toEmail": "mukul@example.test",
+                      "startedAt": 1790741411007
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Ping tested app": [
+          {
+            "startTime": 1790741411014,
+            "executionIndex": 2,
+            "source": [
+              {
+                "previousNode": "Settings",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 50,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "data": "{\"status\":\"API is running on /api\"}",
+                      "headers": {
+                        "x-powered-by": "Express",
+                        "access-control-allow-origin": "*",
+                        "content-type": "application/json; charset=utf-8",
+                        "content-length": "35",
+                        "etag": "W/\"23-w4Vk1UER/YILXs4C2C9KQ3aIL6A\"",
+                        "date": "Wed, 30 Sep 2026 04:10:11 GMT",
+                        "connection": "close"
+                      },
+                      "statusCode": 200,
+                      "statusMessage": "OK"
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Measure response": [
+          {
+            "startTime": 1790741411071,
+            "executionIndex": 3,
+            "source": [
+              {
+                "previousNode": "Ping tested app",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 8,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "url": "http://localhost:3000/",
+                      "statusCode": 200,
+                      "elapsedMs": 72,
+                      "healthy": true,
+                      "error": null,
+                      "checkedAt": "2026-09-30T04:10:11.079Z"
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "App is unhealthy": [
+          {
+            "startTime": 1790741411095,
+            "executionIndex": 4,
+            "source": [
+              {
+                "previousNode": "Measure response",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 9,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [],
+                [
+                  {
+                    "json": {
+                      "url": "http://localhost:3000/",
+                      "statusCode": 200,
+                      "elapsedMs": 72,
+                      "healthy": true,
+                      "error": null,
+                      "checkedAt": "2026-09-30T04:10:11.079Z"
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Healthy execution log": [
+          {
+            "startTime": 1790741411109,
+            "executionIndex": 5,
+            "source": [
+              {
+                "previousNode": "App is unhealthy",
+                "previousNodeOutput": 1,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 6,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "url": "http://localhost:3000/",
+                      "statusCode": 200,
+                      "elapsedMs": 72,
+                      "healthy": true,
+                      "error": null,
+                      "checkedAt": "2026-09-30T04:10:11.079Z"
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      "lastNodeExecuted": "Healthy execution log"
+    },
+    "executionData": {
+      "contextData": {},
+      "nodeExecutionStack": [],
+      "metadata": {},
+      "waitingExecution": {},
+      "waitingExecutionSource": {},
+      "runtimeData": {
+        "version": 1,
+        "establishedAt": 1790741410427,
+        "source": "cli",
+        "triggerNode": {
+          "name": "Manual test",
+          "type": "n8n-nodes-base.manualTrigger"
+        }
+      }
+    }
+  },
+  "mode": "cli",
+  "startedAt": "2026-09-30T04:10:10.420Z",
+  "stoppedAt": "2026-09-30T04:10:11.123Z",
+  "storedAt": "db",
+  "status": "success",
+  "finished": true
+}

@@ -1,0 +1,21 @@
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:2.41.3
+    ports:
+      - "127.0.0.1:5678:5678"
+    environment:
+      TZ: Asia/Kolkata
+      GENERIC_TIMEZONE: Asia/Kolkata
+      N8N_DIAGNOSTICS_ENABLED: "false"
+      N8N_SECURE_COOKIE: "false"
+    volumes:
+      - n8n_data:/home/node/.n8n
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  mailpit:
+    image: axllent/mailpit:v1.27.8
+    ports:
+      - "127.0.0.1:8025:8025"
+    # SMTP is available only inside the Docker network at mailpit:1025.
+volumes:
+  n8n_data:

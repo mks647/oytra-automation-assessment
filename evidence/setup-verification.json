@@ -1,0 +1,11 @@
+{
+  "setup": "fresh clone, pinned checkout, minimal dependency installation, Prisma generate and SQLite schema push passed",
+  "launch": {
+    "status": 200,
+    "body": {
+      "status": "API is running on /api"
+    }
+  },
+  "platform": "Linux Node 24.19.0 / Python 3.12; Windows instructions supplied but not run here",
+  "dockerCompose": "configuration supplied; Docker unavailable in this execution environment, so equivalent n8n npm and local SMTP capture were used"
+}

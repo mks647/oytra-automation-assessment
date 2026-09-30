@@ -1,0 +1,308 @@
+{
+  "updatedAt": "2026-09-30T04:10:22.880Z",
+  "createdAt": "2026-09-30T04:10:22.880Z",
+  "id": "mukul-uptime-monitor",
+  "name": "Mukul - RealWorld Uptime Monitor",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "8ec3df0d-8598-40f4-be3b-01e8eceaed4d",
+      "name": "Manual test",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "3543b8c4-404a-457b-af36-fa6c5d05cb36",
+      "name": "Every five minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -600,
+        -180
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "a819ada9-5fa3-4a6b-a072-6fc88e76a2ac",
+      "name": "Settings",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -360,
+        0
+      ],
+      "parameters": {
+        "jsCode": "return [{json:{appUrl:'http://host.docker.internal:3000/',fromEmail:'mukul@example.test',toEmail:'mukul@example.test',startedAt:Date.now()}}];"
+      }
+    },
+    {
+      "id": "d7234d51-9b8c-4fbb-8f31-3967d8ac4c96",
+      "name": "Ping tested app",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -120,
+        0
+      ],
+      "parameters": {
+        "url": "={{ $json.appUrl }}",
+        "options": {
+          "timeout": 10000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "98cdc6bb-c482-4e10-8f87-c52f5c21c6eb",
+      "name": "Measure response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        120,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const r=$input.first().json,c=$('Settings').first().json;return [{json:{url:c.appUrl,statusCode:r.statusCode??0,elapsedMs:Date.now()-c.startedAt,healthy:!r.error&&r.statusCode===200,error:r.error?JSON.stringify(r.error):null,checkedAt:new Date().toISOString()}}];"
+      }
+    },
+    {
+      "id": "da7296b2-ddfa-4db5-9c48-3739127759be",
+      "name": "App is unhealthy",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        360,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "76cbb02a-5714-40bc-96ac-4df1c0fe1c67",
+              "leftValue": "={{ $json.healthy === false }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "fbac4454-3343-48cb-af14-fa50ae43fccd",
+      "name": "Build uptime alert",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        600,
+        -100
+      ],
+      "parameters": {
+        "jsCode": "const r=$input.first().json;return [{json:{subject:'UPTIME ALERT | RealWorld API',text:'URL: '+r.url+'\\nStatus: '+r.statusCode+'\\nElapsed including retries: '+r.elapsedMs+' ms\\nTime: '+r.checkedAt+'\\nError: '+(r.error??'HTTP status is not 200')}}];"
+      }
+    },
+    {
+      "id": "a371b636-9493-47f8-afeb-8f2d88b7b996",
+      "name": "Healthy execution log",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        600,
+        100
+      ],
+      "parameters": {
+        "jsCode": "return $input.all();"
+      }
+    },
+    {
+      "id": "d0ce856d-11d9-4a9f-a2a3-fdfc19b6a329",
+      "name": "Send email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        840,
+        -100
+      ],
+      "parameters": {
+        "fromEmail": "={{ $('Settings').first().json.fromEmail }}",
+        "toEmail": "={{ $('Settings').first().json.toEmail }}",
+        "subject": "={{ $json.subject }}",
+        "emailFormat": "text",
+        "text": "={{ $json.text }}",
+        "options": {}
+      },
+      "credentials": {
+        "smtp": {
+          "id": "local-smtp",
+          "name": "Local SMTP capture"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 1000
+    },
+    {
+      "id": "9d199341-eb80-44fe-8a1e-c8dee5e81e56",
+      "name": "Verify notification delivery",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1080,
+        -100
+      ],
+      "parameters": {
+        "jsCode": "const r=$input.first().json;if(r.error)throw new Error('Uptime alert SMTP failed: '+JSON.stringify(r.error));return [{json:{delivery:'accepted-by-smtp',messageId:r.messageId??null,accepted:r.accepted??[]}}];"
+      }
+    }
+  ],
+  "connections": {
+    "Manual test": {
+      "main": [
+        [
+          {
+            "node": "Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Every five minutes": {
+      "main": [
+        [
+          {
+            "node": "Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Settings": {
+      "main": [
+        [
+          {
+            "node": "Ping tested app",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ping tested app": {
+      "main": [
+        [
+          {
+            "node": "Measure response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Measure response": {
+      "main": [
+        [
+          {
+            "node": "App is unhealthy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "App is unhealthy": {
+      "main": [
+        [
+          {
+            "node": "Build uptime alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Healthy execution log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build uptime alert": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email": {
+      "main": [
+        [
+          {
+            "node": "Verify notification delivery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true
+  },
+  "staticData": null,
+  "meta": null,
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "8dbe5c0f-0af5-4abb-9178-9858a2f128c8",
+  "versionCounter": 1,
+  "triggerCount": 0,
+  "tags": []
+}

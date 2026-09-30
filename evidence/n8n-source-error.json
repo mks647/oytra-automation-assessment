@@ -1,0 +1,324 @@
+{
+  "data": {
+    "version": 1,
+    "startData": {},
+    "resultData": {
+      "runData": {
+        "Manual test": [
+          {
+            "startTime": 1790741384395,
+            "executionIndex": 0,
+            "source": [],
+            "hints": [],
+            "executionTime": 2,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {},
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Settings": [
+          {
+            "startTime": 1790741384406,
+            "executionIndex": 1,
+            "source": [
+              {
+                "previousNode": "Manual test",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 417,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "baseUrl": "https://jsonplaceholder.typicode.com",
+                      "fromEmail": "mukul@example.test",
+                      "toEmail": "mukul@example.test"
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Get public posts": [
+          {
+            "startTime": 1790741384828,
+            "executionIndex": 2,
+            "source": [
+              {
+                "previousNode": "Settings",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 390,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "body": {},
+                      "headers": {
+                        "date": "Wed, 30 Sep 2026 04:09:45 GMT",
+                        "content-type": "application/json; charset=utf-8",
+                        "content-length": "2",
+                        "connection": "close",
+                        "access-control-allow-credentials": "true",
+                        "cache-control": "max-age=43200",
+                        "etag": "W/\"2-vyGp6PvFo4RvsFtPoIWeCReyIC8\"",
+                        "expires": "-1",
+                        "nel": "{\"report_to\":\"heroku-nel\",\"response_headers\":[\"Via\"],\"max_age\":3600,\"success_fraction\":0.01,\"failure_fraction\":0.1}",
+                        "pragma": "no-cache",
+                        "report-to": "{\"group\":\"heroku-nel\",\"endpoints\":[{\"url\":\"https://nel.heroku.com/reports?s=By0I2DmI6LD%2F6K8XbHnjzTcQkgqnj0VZDIkfCA14CLY%3D\\u0026sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d\\u0026ts=1790741385\"}],\"max_age\":3600}",
+                        "reporting-endpoints": "heroku-nel=\"https://nel.heroku.com/reports?s=By0I2DmI6LD%2F6K8XbHnjzTcQkgqnj0VZDIkfCA14CLY%3D&sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d&ts=1790741385\"",
+                        "server": "cloudflare",
+                        "vary": "Origin, Accept-Encoding",
+                        "via": "2.0 heroku-router",
+                        "x-content-type-options": "nosniff",
+                        "x-powered-by": "Express",
+                        "x-ratelimit-limit": "1000",
+                        "x-ratelimit-remaining": "999",
+                        "x-ratelimit-reset": "1790741426",
+                        "cf-cache-status": "MISS",
+                        "cf-ray": "a4305fb83eeb30be-SEA",
+                        "alt-svc": "h3=\":443\"; ma=86400"
+                      },
+                      "statusCode": 404,
+                      "statusMessage": "Not Found"
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Keep top five": [
+          {
+            "startTime": 1790741385233,
+            "executionIndex": 3,
+            "source": [
+              {
+                "previousNode": "Get public posts",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 10,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "ok": false,
+                      "error": "Posts API unavailable or invalid response",
+                      "statusCode": 404
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Source is usable": [
+          {
+            "startTime": 1790741385248,
+            "executionIndex": 4,
+            "source": [
+              {
+                "previousNode": "Keep top five",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 28,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [],
+                [
+                  {
+                    "json": {
+                      "ok": false,
+                      "error": "Posts API unavailable or invalid response",
+                      "statusCode": 404
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Source failure digest": [
+          {
+            "startTime": 1790741385280,
+            "executionIndex": 5,
+            "source": [
+              {
+                "previousNode": "Source is usable",
+                "previousNodeOutput": 1,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 7,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "subject": "Morning brief | SOURCE ERROR",
+                      "text": "No digest available. Posts API unavailable or invalid response (status 404). Check the n8n execution and rerun."
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Send email": [
+          {
+            "startTime": 1790741385291,
+            "executionIndex": 6,
+            "source": [
+              {
+                "previousNode": "Source failure digest",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 194,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "accepted": [
+                        "mukul@example.test"
+                      ],
+                      "rejected": [],
+                      "ehlo": [
+                        "PIPELINING",
+                        "8BITMIME",
+                        "SMTPUTF8"
+                      ],
+                      "envelopeTime": 3,
+                      "messageTime": 44,
+                      "messageSize": 490,
+                      "response": "250 OK: message queued",
+                      "envelope": {
+                        "from": "mukul@example.test",
+                        "to": [
+                          "mukul@example.test"
+                        ]
+                      },
+                      "messageId": "<a7271f48-4e8c-3a29-9216-7c6bbf5549ec@example.test>"
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Verify notification delivery": [
+          {
+            "startTime": 1790741385493,
+            "executionIndex": 7,
+            "source": [
+              {
+                "previousNode": "Send email",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 9,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "delivery": "accepted-by-smtp",
+                      "messageId": "<a7271f48-4e8c-3a29-9216-7c6bbf5549ec@example.test>",
+                      "accepted": [
+                        "mukul@example.test"
+                      ],
+                      "response": "250 OK: message queued"
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      "lastNodeExecuted": "Verify notification delivery"
+    },
+    "executionData": {
+      "contextData": {},
+      "nodeExecutionStack": [],
+      "metadata": {},
+      "waitingExecution": {},
+      "waitingExecutionSource": {},
+      "runtimeData": {
+        "version": 1,
+        "establishedAt": 1790741384394,
+        "source": "cli",
+        "triggerNode": {
+          "name": "Manual test",
+          "type": "n8n-nodes-base.manualTrigger"
+        }
+      }
+    }
+  },
+  "mode": "cli",
+  "startedAt": "2026-09-30T04:09:44.384Z",
+  "stoppedAt": "2026-09-30T04:09:45.507Z",
+  "storedAt": "db",
+  "status": "success",
+  "finished": true
+}

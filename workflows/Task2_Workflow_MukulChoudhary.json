@@ -1,0 +1,485 @@
+{
+  "updatedAt": "2026-09-30T04:06:50.347Z",
+  "createdAt": "2026-09-30T04:06:50.347Z",
+  "id": "mukul-morning-brief",
+  "name": "Mukul - Public API Morning Brief",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "9fe54da6-7edb-4656-b1ce-b192bc7940b3",
+      "name": "Manual test",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -700,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "a8db7f6f-e364-4c3d-89c1-41d4b56d45a5",
+      "name": "Hourly schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -700,
+        -180
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "24052ff7-9b2d-411c-91cd-0ec0870c6dc3",
+      "name": "Webhook test",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -700,
+        180
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "mukul-morning-brief",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "webhookId": "0e209bfa-3e3f-46c0-a55b-ae33003c387d"
+    },
+    {
+      "id": "6e3dec60-05b9-40d2-af2f-fbd0df5a761e",
+      "name": "Settings",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -480,
+        0
+      ],
+      "parameters": {
+        "jsCode": "return [{json:{baseUrl:'https://jsonplaceholder.typicode.com',fromEmail:'mukul@example.test',toEmail:'mukul@example.test'}}];"
+      }
+    },
+    {
+      "id": "799a2afc-a244-4a88-9581-215e4c4b12ec",
+      "name": "Get public posts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -240,
+        0
+      ],
+      "parameters": {
+        "url": "={{ $json.baseUrl + '/posts' }}",
+        "options": {
+          "timeout": 10000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "dc8fca05-c180-4677-ba68-789c8e41aa92",
+      "name": "Keep top five",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const r=$input.first().json;\nif (r.error || r.statusCode!==200 || !Array.isArray(r.body)) return [{json:{ok:false,error:'Posts API unavailable or invalid response',statusCode:r.statusCode??null}}];\nconst posts=r.body.filter(p=>Number.isInteger(p.id)&&typeof p.title==='string').sort((a,b)=>b.id-a.id).slice(0,5).map(p=>({id:p.id,title:p.title}));\nif(!posts.length) return [{json:{ok:false,error:'No usable posts returned'}}];\nreturn [{json:{ok:true,posts,topPostId:posts[0].id}}];"
+      }
+    },
+    {
+      "id": "0be7488f-9a9a-4789-92d5-7b644ca959cc",
+      "name": "Source is usable",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "702ee88f-805f-4f3c-b025-cf2329e76a63",
+              "leftValue": "={{ $json.ok === true }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "40058f4f-4638-4d51-b801-83cc2cca556d",
+      "name": "Get top post comments",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        -100
+      ],
+      "parameters": {
+        "url": "={{ $('Settings').first().json.baseUrl + '/posts/' + $json.topPostId + '/comments' }}",
+        "options": {
+          "timeout": 10000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "c480ff5c-f392-417d-8e45-df3dad411730",
+      "name": "Build enriched digest",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        -100
+      ],
+      "parameters": {
+        "jsCode": "const r=$input.first().json, source=$('Keep top five').first().json;\nconst enriched=!r.error && r.statusCode===200 && Array.isArray(r.body);\nconst comments=enriched?r.body.filter(c=>typeof c.body==='string'):[];\nreturn [{json:{posts:source.posts,commentCount:comments.length,enrichmentOk:enriched,generatedAt:new Date().toISOString(),warning:enriched?'':'Comments unavailable: digest contains posts only.'}}];"
+      }
+    },
+    {
+      "id": "74602c05-20de-419e-8ec4-11e2b5b2d9b0",
+      "name": "At least five comments",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        960,
+        -100
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3aaa99c6-531f-4609-8edf-b1a033cd3848",
+              "leftValue": "={{ $json.enrichmentOk === true && $json.commentCount >= 5 }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "869497d2-66e5-49a8-95cb-dd1205191db9",
+      "name": "High activity digest",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        -200
+      ],
+      "parameters": {
+        "jsCode": "const d=$input.first().json;return [{json:{subject:'Morning brief | HIGH ACTIVITY',text:'Morning brief - '+d.generatedAt+'\\nTop five posts (highest ID, NOT a popularity ranking):\\n'+d.posts.map(p=>p.id+'. '+p.title).join('\\n')+'\\nTop post comment count: '+d.commentCount}}];"
+      }
+    },
+    {
+      "id": "6aeb8c12-00a6-40da-8c6a-41083a14f931",
+      "name": "Standard or partial digest",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const d=$input.first().json;return [{json:{subject:d.enrichmentOk?'Morning brief | STANDARD':'Morning brief | PARTIAL DATA',text:'Morning brief - '+d.generatedAt+'\\n'+d.posts.map(p=>p.id+'. '+p.title).join('\\n')+'\\nTop post comments: '+d.commentCount+'\\n'+d.warning}}];"
+      }
+    },
+    {
+      "id": "004e7b11-84d5-4e18-a89a-457c329c3c11",
+      "name": "Source failure digest",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        250
+      ],
+      "parameters": {
+        "jsCode": "const d=$input.first().json;console.error('Morning brief source failure',JSON.stringify(d));return [{json:{subject:'Morning brief | SOURCE ERROR',text:'No digest available. '+d.error+' (status '+(d.statusCode??'network/schema error')+'). Check the n8n execution and rerun.'}}];"
+      }
+    },
+    {
+      "id": "6b2b1773-6c79-4376-b558-a99bc6479468",
+      "name": "Send email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1450,
+        0
+      ],
+      "parameters": {
+        "fromEmail": "={{ $('Settings').first().json.fromEmail }}",
+        "toEmail": "={{ $('Settings').first().json.toEmail }}",
+        "subject": "={{ $json.subject }}",
+        "emailFormat": "text",
+        "text": "={{ $json.text }}",
+        "options": {}
+      },
+      "credentials": {
+        "smtp": {
+          "id": "local-smtp",
+          "name": "Local SMTP capture"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 1000
+    },
+    {
+      "id": "01bd125a-d3e6-4a02-a591-e45fcef138f4",
+      "name": "Verify notification delivery",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1680,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const r=$input.first().json;if(r.error) throw new Error('SMTP delivery failed: '+JSON.stringify(r.error));return [{json:{delivery:'accepted-by-smtp',messageId:r.messageId??null,accepted:r.accepted??[],response:r.response??null}}];"
+      }
+    }
+  ],
+  "connections": {
+    "Manual test": {
+      "main": [
+        [
+          {
+            "node": "Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hourly schedule": {
+      "main": [
+        [
+          {
+            "node": "Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook test": {
+      "main": [
+        [
+          {
+            "node": "Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Settings": {
+      "main": [
+        [
+          {
+            "node": "Get public posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get public posts": {
+      "main": [
+        [
+          {
+            "node": "Keep top five",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keep top five": {
+      "main": [
+        [
+          {
+            "node": "Source is usable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Source is usable": {
+      "main": [
+        [
+          {
+            "node": "Get top post comments",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Source failure digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get top post comments": {
+      "main": [
+        [
+          {
+            "node": "Build enriched digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build enriched digest": {
+      "main": [
+        [
+          {
+            "node": "At least five comments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "At least five comments": {
+      "main": [
+        [
+          {
+            "node": "High activity digest",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Standard or partial digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "High activity digest": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Standard or partial digest": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Source failure digest": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email": {
+      "main": [
+        [
+          {
+            "node": "Verify notification delivery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true
+  },
+  "staticData": null,
+  "meta": null,
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "f5af743a-23c8-4739-ad67-f9d37d760e91",
+  "versionCounter": 1,
+  "triggerCount": 0,
+  "tags": []
+}

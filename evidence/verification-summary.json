@@ -1,0 +1,92 @@
+[
+  {
+    "test": "n8n-uptime-alert",
+    "status": "success",
+    "finished": true,
+    "nodes": {
+      "Manual test": "success",
+      "Settings": "success",
+      "Ping tested app": "success",
+      "Measure response": "success",
+      "App is unhealthy": "success",
+      "Build uptime alert": "success",
+      "Send email": "success",
+      "Verify notification delivery": "success"
+    },
+    "lastNode": "Verify notification delivery"
+  },
+  {
+    "test": "n8n-delivery-error",
+    "status": "error",
+    "expected": true,
+    "detail": "SMTP rejection propagated as visible failed execution; see delivery error log."
+  },
+  {
+    "test": "n8n-source-error",
+    "status": "success",
+    "finished": true,
+    "nodes": {
+      "Manual test": "success",
+      "Settings": "success",
+      "Get public posts": "success",
+      "Keep top five": "success",
+      "Source is usable": "success",
+      "Source failure digest": "success",
+      "Send email": "success",
+      "Verify notification delivery": "success"
+    },
+    "lastNode": "Verify notification delivery"
+  },
+  {
+    "test": "n8n-success",
+    "status": "success",
+    "finished": true,
+    "nodes": {
+      "Manual test": "success",
+      "Settings": "success",
+      "Get public posts": "success",
+      "Keep top five": "success",
+      "Source is usable": "success",
+      "Get top post comments": "success",
+      "Build enriched digest": "success",
+      "At least five comments": "success",
+      "High activity digest": "success",
+      "Send email": "success",
+      "Verify notification delivery": "success"
+    },
+    "lastNode": "Verify notification delivery"
+  },
+  {
+    "test": "n8n-enrichment-error",
+    "status": "success",
+    "finished": true,
+    "nodes": {
+      "Manual test": "success",
+      "Settings": "success",
+      "Get public posts": "success",
+      "Keep top five": "success",
+      "Source is usable": "success",
+      "Get top post comments": "success",
+      "Build enriched digest": "success",
+      "At least five comments": "success",
+      "Standard or partial digest": "success",
+      "Send email": "success",
+      "Verify notification delivery": "success"
+    },
+    "lastNode": "Verify notification delivery"
+  },
+  {
+    "test": "n8n-uptime-healthy",
+    "status": "success",
+    "finished": true,
+    "nodes": {
+      "Manual test": "success",
+      "Settings": "success",
+      "Ping tested app": "success",
+      "Measure response": "success",
+      "App is unhealthy": "success",
+      "Healthy execution log": "success"
+    },
+    "lastNode": "Healthy execution log"
+  }
+]

@@ -1,0 +1,23 @@
+.env
+.env.*
+!.env.example
+demo-app/
+node_modules/
+.n8n/
+__pycache__/
+*.db
+*.db-journal
+.DS_Store
+
+# Personal setup and rehearsal notes
+docs/SETUP_HINDI.md
+docs/VIDEO_SCRIPT.md
+demo-app/
+node_modules/
+.n8n/
+.env
+*.db
+*.db-journal
+__pycache__/
+docs/SETUP_HINDI.md
+docs/VIDEO_SCRIPT.md
