@@ -1,4 +1,6 @@
 # Automation & QA Assessment - Mukul Choudhary
+## Demo video
+[Watch the assessment walkthrough](https://drive.google.com/file/d/1WEEPC-pz9UHtl1kd92a56pJF8znfHEyY/view?usp=sharing)
 
 ## Task 1: QA
 Tested the Node/Express RealWorld API at upstream commit `30b68e1e881462b2f4164ea09ab4c4f5699c7b0b`. SQLite replaces PostgreSQL only for local testing; application logic is unchanged. Signup, login, create, body edit, delete, deleted-content lookup and requests without a session token were exercised. Seven findings, reproduction steps, severity and a root-cause analysis are in `docs/Task1_QA_Report_MukulChoudhary.pdf`; redacted request/response evidence is in `evidence/qa-results.json`. This is API-level QA, not a claim of complete upstream frontend/browser coverage. A small QA client is included for a local walkthrough.
@@ -25,3 +27,4 @@ python scripts/run_demo.py
 ```
 
 Open n8n at `http://localhost:5678` and import the workflow JSON. Create an SMTP credential with host `mailpit`, port `1025`, SSL/TLS off and STARTTLS disabled for this local test inbox. Select it in each Send email node. The inbox is at `http://localhost:8025`. Workflow Settings use the local test email addresses; keep external SMTP credentials in n8n only.
+
